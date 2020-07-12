@@ -8,6 +8,19 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="d_id" jdbcType="INTEGER" property="dId" />
   </resultMap>
+  <resultMap id="WithDeptResultMap" type="com.leey.curd.bean.Employee">
+    <id column="emp_id" jdbcType="INTEGER" property="empId" />
+    <result column="emp_name" jdbcType="VARCHAR" property="empName" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="d_id" jdbcType="INTEGER" property="dId" />
+    <!--指定联合查询出的部门字段的封装-->
+    <association property="department" javaType="com.leey.curd.bean.Department">
+      <id column="dep_id" property="depId"/>
+      <result column="dept_name" property="deptName"/>
+    </association>
+
+  </resultMap>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -72,8 +85,8 @@
   <sql id="WithDept_Column_List">
     e.emp_id, e.emp_name, e.gender, e.email, e.d_id, d.dept_id, d.dept_name
   </sql>
-
-  <select id="selectByExampleWithDept" parameterType="com.leey.curd.bean.EmployeeExample" resultMap="BaseResultMap">
+  <!--查询员工的同时带部门信息-->
+  <select id="selectByExampleWithDept" parameterType="com.leey.curd.bean.EmployeeExample" resultMap="WithDeptResultMap">
     select
     <if test="distinct">
       distinct
@@ -87,13 +100,13 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKeyWithDEpt" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKeyWithDEpt" parameterType="java.lang.Integer" resultMap="WithDeptResultMap">
     select
-    <include refid="Base_Column_List" />
-    from tbl_emp
+    <include refid="WithDept_Column_List" />
+    from tbl_emp e left join tbl_dept d on e.`d_id`=d.`dept_id`
     where emp_id = #{empId,jdbcType=INTEGER}
   </select>
-
+  <!--查询员工的同时不带部门信息-->
   <select id="selectByExample" parameterType="com.leey.curd.bean.EmployeeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
