@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:applicationContext.xml", "file:web/WEB-INF/dispatchServlet-servlet.xml"})
+@ContextConfiguration(locations = {"classpath:applicationContext.xml", "file:web/WEB-INF/dispatcherServlet-servlet.xml"})
 public class MvcTest {
     // 打桩测试,虚拟mvc请求，获取处理结果
     MockMvc mockMvc;
